@@ -1,0 +1,17 @@
+<resources>
+    <string name="facebook_app_id">1783920638476306</string>
+    <string name="fb_login_protocol_scheme">fb1783920638476306</string>
+
+    <string name="app_name">PointApp</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_logout">Выйти</string>
+
+    <string name="menu_home">Поиск</string>
+    <string name="no_items">Список пока пуст\nНачните вводить имя пользователя</string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="search_limit">Превышен лимит запросов, попробуйте позже</string>
+</resources>
