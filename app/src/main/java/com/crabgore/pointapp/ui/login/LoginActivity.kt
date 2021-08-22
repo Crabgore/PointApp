@@ -30,9 +30,7 @@ class LoginActivity : AppCompatActivity() {
                 currentAccessToken: AccessToken?
             ) {
                 Timber.d("facebook $currentAccessToken")
-                if (currentAccessToken != null) {
-                    close()
-                }
+                if (currentAccessToken != null) close()
             }
         }
     }
@@ -51,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
 
         /**
          * добавлено для возможности смены пользователя, как того требует задание.
-         * по умолчанию, в самлм facebook sdk невозможно этого реализовать (возможно выйти из
+         * по умолчанию, в самом facebook sdk невозможно этого реализовать (возможно выйти из
          * аккаунта, но при повторном входе будет предлагать только вход в предыдущий аккаунт,
          * без возможности смены)
          */
@@ -63,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
                 Timber.d("facebook success")
                 close()
             }
+
             override fun onCancel() {}
             override fun onError(exception: FacebookException) {}
         })

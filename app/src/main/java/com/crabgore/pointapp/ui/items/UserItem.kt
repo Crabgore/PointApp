@@ -36,6 +36,7 @@ class UserItem(
 
         override fun unbindView(item: UserItem) {
             name.text = null
+            icon.setImageDrawable(null)
         }
     }
 }

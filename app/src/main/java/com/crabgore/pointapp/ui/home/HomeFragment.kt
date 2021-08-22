@@ -1,7 +1,6 @@
 package com.crabgore.pointapp.ui.home
 
 import android.annotation.SuppressLint
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,8 +14,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.crabgore.pointapp.Const.MyPreferences.Companion.DECORATION
 import com.crabgore.pointapp.R
+import com.crabgore.pointapp.common.addDecoration
 import com.crabgore.pointapp.databinding.FragmentHomeBinding
 import com.crabgore.pointapp.ui.items.UserItem
 import com.mikepenz.fastadapter.FastAdapter
@@ -43,11 +42,6 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString("search", searchText)
-        super.onSaveInstanceState(outState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,42 +82,6 @@ class HomeFragment : Fragment() {
         if (binding.searchEt.text.isNullOrEmpty()) noItems(true)
     }
 
-    private fun startObservers() {
-        viewModel.apply {
-            searchedUsers.observe(viewLifecycleOwner, { data ->
-                data?.let {
-                    if (itemAdapter.itemList != it) setSearchRV(it)
-                }
-            })
-
-            additionalUsers.observe(viewLifecycleOwner, { data ->
-                data?.let {
-                    updateRV(it)
-                }
-            })
-
-            failures.observe(viewLifecycleOwner, { data ->
-                data?.let {
-                    if (it) {
-                        Toast.makeText(
-                            requireContext(),
-                            resources.getString(R.string.search_limit),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        failures.value = false
-                    }
-                }
-            })
-        }
-    }
-
-    private fun setSearchRV(list: List<UserItem>) {
-        itemAdapter.clear()
-        itemAdapter.add(list)
-        binding.usersRv.adapter?.notifyDataSetChanged()
-        page++
-    }
-
     private fun initSearchAdapter() {
         itemAdapter = ItemAdapter()
         val fastAdapter = FastAdapter.with(itemAdapter)
@@ -156,6 +114,43 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun startObservers() {
+        viewModel.apply {
+            searchedUsers.observe(viewLifecycleOwner, { data ->
+                data?.let {
+                    setSearchRV(it)
+                }
+            })
+
+            additionalUsers.observe(viewLifecycleOwner, { data ->
+                data?.let {
+                    updateRV(it)
+                }
+            })
+
+            failures.observe(viewLifecycleOwner, { data ->
+                data?.let {
+                    if (it) {
+                        Toast.makeText(
+                            requireContext(),
+                            resources.getString(R.string.search_limit),
+                            Toast.LENGTH_LONG
+                        ).show()
+                        failures.value = false
+                    }
+                }
+            })
+        }
+    }
+
+    private fun setSearchRV(list: List<UserItem>) {
+        itemAdapter.clear()
+        itemAdapter.add(list)
+        binding.usersRv.adapter?.notifyDataSetChanged()
+        page++
+        offset = 10
+    }
+
     private fun updateRV(list: List<UserItem>) {
         itemAdapter.add(list)
         binding.usersRv.adapter?.notifyDataSetChanged()
@@ -185,24 +180,5 @@ class HomeFragment : Fragment() {
 
     private fun noItems(boolean: Boolean) {
         binding.usersRv.visibility = if (boolean) GONE else VISIBLE
-    }
-
-    /**
-     * добавляем расстояние между элементами в RecyclerView
-     */
-    private fun addDecoration(recyclerView: RecyclerView) {
-        val spacing = DECORATION
-        recyclerView.apply {
-            setPadding(spacing, spacing, spacing, spacing)
-            clipToPadding = false
-            clipChildren = false
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect, itemPosition: Int, parent: RecyclerView
-                ) {
-                    outRect.set(spacing, spacing, spacing, spacing)
-                }
-            })
-        }
     }
 }

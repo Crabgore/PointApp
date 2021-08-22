@@ -33,7 +33,7 @@ class HomeViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(::onError)
-            .subscribe(::parseAdditionalEventsResponse, ::handleFailure)
+            .subscribe(::parseAdditionalSearchResponse, ::handleFailure)
 
         addDisposable(disposable)
     }
@@ -50,7 +50,7 @@ class HomeViewModel(
         searchedUsers.postValue(makeItemsList(response))
     }
 
-    private fun parseAdditionalEventsResponse(response: SearchResponse) {
+    private fun parseAdditionalSearchResponse(response: SearchResponse) {
         Timber.d("Дополнительный список пользователей $response")
         additionalUsers.postValue(makeItemsList(response))
     }
